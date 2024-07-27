@@ -1,0 +1,67 @@
+.cell {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ccc;
+}
+
+/* .cell:hover{
+    background: lightgray;
+} */
+
+.cell.wall {
+    background-color: #000;
+}
+
+.star-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 20px solid gold;
+    transform: translate(-50%, -50%);
+    animation: star-animation 0.5s ease-out forwards;
+}
+
+@keyframes star-animation {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+
+    100% {
+        width: 50px;
+        height: 50px;
+        opacity: 0;
+    }
+}
+
+
+.cell-path {
+    background: linear-gradient(to left, rgb(1, 1, 91), rgb(0, 0, 82));
+    animation: .2s ease cellPathEffect;
+}
+
+@keyframes cellPathEffect {
+    0% {
+        transform: scale(.8);
+        opacity: .2;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+#traversed {
+    background: darkblue;
+}
+
+/* #not-traversed{
+    background-color: darkblue;
+} */

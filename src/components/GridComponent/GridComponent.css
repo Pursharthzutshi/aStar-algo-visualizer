@@ -1,0 +1,29 @@
+/* src/components/GridComponent.css */
+.grid {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.row {
+    display: flex;
+}
+
+.reset-path-button,
+.find-path-button {
+    background: rgb(0, 0, 95);
+    border: 2px solid darkblue;
+    font-size: 1rem;
+    color: white;
+    padding: 4px 12px 4px 12px;
+}
+
+
+.reset-path-button:hover,
+.find-path-button:hover {
+    background: white;
+    color: darkblue;
+    transition: .2s;
+    cursor: pointer;
+}
