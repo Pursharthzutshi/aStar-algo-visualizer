@@ -113,16 +113,6 @@ function PathFindingComponent() {
     }, [grid, startNode, endNode]);
     // RESET GRID POINTS 
 
-    const resetGrid = (resetGridUpdates: Partial<GridType>) => {
-        Dispatch(setFindPathStatus(false));
-
-        return grid.map(rowArray => {
-            return rowArray.map((prevCell) => {
-                return { ...prevCell, ...resetGridUpdates }
-            })
-        })
-
-    }
 
     
     const resetPoints = () => {
