@@ -14,7 +14,14 @@ function GridComponent({ grid, blockedCell, removeSelectedBlockedCell, changeGri
                         <CellComponent
                             cell={cell}
                             changeGridCell={changeGridCell}
-                            blockedCell={blockedCell} removeSelectedBlockedCell={removeSelectedBlockedCell} isTraversed={false} isStart={false} isEnd={false} isWall={false} isPath={false} />
+                            blockedCell={blockedCell} removeSelectedBlockedCell={removeSelectedBlockedCell} 
+                            isTraversed={false} 
+                            isStart={false}
+                            isEnd={false}
+                            isWall={false}
+                            isPath={false}
+                            isVisitedOnce={false}
+                            />
                     ))}
                 </div>
             ))}

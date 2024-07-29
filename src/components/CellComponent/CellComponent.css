@@ -15,7 +15,24 @@
     background: rgb(0, 0, 75);
 }
 
+.cell-is-visited-once{
+    opacity: .8;
+    background: rgba(0, 12, 46, 0.74);
+    animation: .6s ease-in cellVisitedOnce;
+}
 
+@keyframes cellVisitedOnce {
+    0%{
+        background: rgba(0, 12, 46, 0.244);
+        transform: scale(.1);
+    }
+
+    100%{
+        background: rgba(0, 12, 46, 0.74);
+        transform: scale(1);
+    }
+    
+}
 @keyframes cellTraversedEffect {
     0% {
         background: rgba(89, 89, 252, 0.57);
@@ -49,3 +66,4 @@
 .prevent-selecting-third-point {
     pointer-events: none;
 }
+

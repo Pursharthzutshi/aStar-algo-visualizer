@@ -62,7 +62,6 @@ function PathFindingComponent() {
             setGrid(newGridCell)
         }
 
-
         Dispatch(setFindPathStatus(false));
         Dispatch(setResetPointsButtonStatus(true))
 
@@ -87,9 +86,6 @@ function PathFindingComponent() {
             return;
         }
 
-        console.log(startNode)
-        console.log(endNode)
-
         const newPath = AStar(grid, startNode, endNode);
 
         const ids: ReturnType<typeof setTimeout>[] = [];
@@ -100,6 +96,7 @@ function PathFindingComponent() {
                 setGrid((prevGrid) => {
                     const updatedGrid = [...prevGrid];
                     updatedGrid[val.row][val.col].isTraversed = true;
+                    updatedGrid[val.row][val.col].isVisitedOnce = false;
                     return updatedGrid;
                 });
             }, index * 20);
@@ -112,13 +109,9 @@ function PathFindingComponent() {
         setTimeoutIds(ids);
         Dispatch(setFindPathStatus(false));
 
-
-
-
     }, [grid, startNode, endNode]);
+
     // RESET GRID POINTS 
-
-
 
     const resetPoints = () => {
         setTimeoutIds([]);
@@ -134,6 +127,7 @@ function PathFindingComponent() {
                     isStart: false,
                     isEnd: false,
                     isPath: false,
+                    isVisitedOnce:false,
                     parent: null
 
                 };

@@ -19,13 +19,14 @@ function AStar(grid: GridType[][], startNode: TileType, endNode: TileType): Tile
     functionCost[startNode.row][startNode.col] = startNode.fScore;
 
     while (TraversedPaths.length > 0) {
+
         const currentOptimizedNode = findOptimizedFScore(TraversedPaths, functionCost);
 
         if (currentOptimizedNode === endNode) {
             return ReconstructPath(endNode);
         }
 
-        TraversedPaths = TraversedPaths.filter(node => node !== currentOptimizedNode);
+        TraversedPaths = TraversedPaths.filter((node: TileType) => node !== currentOptimizedNode);
         TraversedOptimizedPaths.push(currentOptimizedNode);
 
         const neighbors = GetNeighborsNodes(grid, currentOptimizedNode);
@@ -43,12 +44,16 @@ function AStar(grid: GridType[][], startNode: TileType, endNode: TileType): Tile
                 continue;
             }
 
+
             neighbor.parent = currentOptimizedNode;
             neighbor.gScore = tentativeGScore;
             neighbor.hScore = heuristicCost[neighbor.row][neighbor.col];
             neighbor.fScore = neighbor.gScore + neighbor.hScore;
 
             functionCost[neighbor.row][neighbor.col] = neighbor.fScore;
+            neighbor.isVisitedOnce = true; 
+
+
         }
     }
 

@@ -14,7 +14,7 @@ function createCell(): GridType[][] {
                 isEnd: false,
                 isWall: false,
                 isPath: false,
-                isSelect: false,
+                isVisitedOnce: false,
                 isTraversed: false,
                 gScore: Infinity,
                 hScore: Infinity,
