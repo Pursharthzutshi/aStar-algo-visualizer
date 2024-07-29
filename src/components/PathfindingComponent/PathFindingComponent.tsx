@@ -47,6 +47,7 @@ function PathFindingComponent() {
 
     const changeGridCell = (row: number, col: number) => {
 
+
         if (!startNode) {
             const newGridCell: GridType[][] = updateGridCell(row, col, { isStart: true, isEnd: false, isWall: false })
             setStartNode(newGridCell[row][col]);
@@ -56,6 +57,7 @@ function PathFindingComponent() {
             setEndNode(newGridCell[row][col]);
             setGrid(newGridCell)
         }
+        
         Dispatch(setFindPathStatus(false));
         Dispatch(setResetPointsButtonStatus(true))
 
@@ -74,14 +76,17 @@ function PathFindingComponent() {
     }
 
     // ALGORITHIM
-
     const runAlgorithm = useCallback(() => {
-        console.log("asd")
         if (!startNode || !endNode) {
             Dispatch(setFindPathStatus(true));
             return;
         }
+
+        console.log(startNode)
+        console.log(endNode)
+        
         const newPath = AStar(grid, startNode, endNode);
+
         const ids: ReturnType<typeof setTimeout>[] = [];
 
         newPath?.forEach((val: TileType, index: number) => {
@@ -92,18 +97,20 @@ function PathFindingComponent() {
                     updatedGrid[val.row][val.col].isTraversed = true;
                     return updatedGrid;
                 });
-                Dispatch(setResetAlgoStatus(true))
-            }, index * 200);
+            }, index * 20);
+            Dispatch(setResetAlgoStatus(true));
 
             ids.push(timeoutId);
         });
+        console.log(newPath)
 
         setTimeoutIds(ids);
         Dispatch(setFindPathStatus(false));
 
+     
+
+
     }, [grid, startNode, endNode]);
-
-
     // RESET GRID POINTS 
 
     const resetGrid = (resetGridUpdates: Partial<GridType>) => {
@@ -117,24 +124,41 @@ function PathFindingComponent() {
 
     }
 
+    
     const resetPoints = () => {
+        setTimeoutIds([]);
 
-        Dispatch(setResetPointsButtonStatus(false))
-        setStartNode(null)
-        setEndNode(null)
-        const updatedResetGrid = resetGrid({ isTraversed: false, isStart: false, isEnd: false })
-        setGrid(updatedResetGrid)
-    }
+        Dispatch(setResetAlgoStatus(false));
+        Dispatch(setResetPointsButtonStatus(false));
+    
+        const updatedResetGrid = grid.map(rowArray => {
+            return rowArray.map(cell => {
+                return {
+                    ...cell,
+                    isTraversed: false,
+                    isStart: false,
+                    isEnd: false,
+                    isPath: false,
+                    parent: null
+
+                };
+            });
+        });
+
+        setStartNode(null); 
+        setEndNode(null); 
+        setGrid(updatedResetGrid);
+    };
 
     // RESET ALGORITHIM
 
     const resetAlgorithim = () => {
         setStartNode(null);
         setEndNode(null);
-        setGrid(createCell());
-
         Dispatch(setResetPointsButtonStatus(false));
         Dispatch(setResetAlgoStatus(false));
+        setGrid(createCell());
+
 
         timeoutIds.forEach(clearTimeout);
 

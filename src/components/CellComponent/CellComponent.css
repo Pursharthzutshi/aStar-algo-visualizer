@@ -11,7 +11,6 @@
 
 .cell-traversed {
     pointer-events: none;
-
     animation: .2s ease-in cellTraversedEffect;
     background: rgb(0, 0, 75);
 }
@@ -21,13 +20,11 @@
     0% {
         background: rgba(89, 89, 252, 0.57);
         transform: scale(.1);
-        /* opacity: .2; */
     }
 
     100% {
         background: rgba(0, 0, 139, 0.89);
         transform: scale(1);
-        /* opacity: 1; */
     }
 }
 
