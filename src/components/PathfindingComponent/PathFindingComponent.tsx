@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import { GridType, TileType } from "../../types/CellTypes";
 import { useAppDispatch, useAppSelector } from "../../ReduxHooks";
 import { setFindPathStatus, setResetAlgoStatus, setResetPointsButtonStatus } from "../../ReduxSlicers/AlgorithimSlicer";
-
 import GridComponent from "../GridComponent/GridComponent";
 import AStar from "../algorithim/Astar";
 import createCell from "../util/CreateCell";
@@ -47,7 +46,6 @@ function PathFindingComponent() {
 
     const changeGridCell = (row: number, col: number) => {
 
-
         if (!startNode) {
             const newGridCell: GridType[][] = updateGridCell(row, col, { isStart: true, isEnd: false, isWall: false })
             setStartNode(newGridCell[row][col]);
@@ -57,7 +55,14 @@ function PathFindingComponent() {
             setEndNode(newGridCell[row][col]);
             setGrid(newGridCell)
         }
-        
+
+        if(startNode?.isStart == true && endNode?.isStart == true){
+            const newGridCell: GridType[][] = updateGridCell(row, col, { isStart: true, isEnd: false, isWall: false })
+            setStartNode(newGridCell[row][col]);
+            setGrid(newGridCell)
+        }
+
+
         Dispatch(setFindPathStatus(false));
         Dispatch(setResetPointsButtonStatus(true))
 
@@ -84,7 +89,7 @@ function PathFindingComponent() {
 
         console.log(startNode)
         console.log(endNode)
-        
+
         const newPath = AStar(grid, startNode, endNode);
 
         const ids: ReturnType<typeof setTimeout>[] = [];
@@ -107,20 +112,20 @@ function PathFindingComponent() {
         setTimeoutIds(ids);
         Dispatch(setFindPathStatus(false));
 
-     
+
 
 
     }, [grid, startNode, endNode]);
     // RESET GRID POINTS 
 
 
-    
+
     const resetPoints = () => {
         setTimeoutIds([]);
 
         Dispatch(setResetAlgoStatus(false));
         Dispatch(setResetPointsButtonStatus(false));
-    
+
         const updatedResetGrid = grid.map(rowArray => {
             return rowArray.map(cell => {
                 return {
@@ -135,8 +140,8 @@ function PathFindingComponent() {
             });
         });
 
-        setStartNode(null); 
-        setEndNode(null); 
+        setStartNode(null);
+        setEndNode(null);
         setGrid(updatedResetGrid);
     };
 
@@ -149,7 +154,6 @@ function PathFindingComponent() {
         Dispatch(setResetAlgoStatus(false));
         setGrid(createCell());
 
-
         timeoutIds.forEach(clearTimeout);
 
         setTimeoutIds([]);
@@ -158,28 +162,51 @@ function PathFindingComponent() {
 
     return (
         <div className="grid">
-            <h4 className="top-heading">A Star Visualizer</h4>
-            <div className="reset-buttons-div">
+            <div className="grid-component-container">
+                <h4 className="top-heading">A Star Visualizer</h4>
+                <div className="reset-buttons-div">
 
+                    {
+                        resetAlgoStatus ? <button className="reset-path-button" onClick={resetAlgorithim}>Reset All</button> : <button className="find-path-button" onClick={runAlgorithm}>Find Path</button>
+                    }
+                    {
+                        resetPointsButtonStatus ? <button className="reset-path-button" onClick={resetPoints}>Reset start and end Points</button> : null
+                    }
+
+                </div>
+
+                <div className="heading-div">
+                    <h4>Please select start and end point by clicking on the grid cell</h4>
+                    <h4>By right clicking on white cells you can set up blocked walls. By Right Clicking on blocked wall you can remove selected blocked walls</h4>
+                </div>
+                <Notations />
+
+                <GridComponent grid={grid} blockedCell={blockedCell} removeSelectedBlockedCell={removeSelectedBlockedCell} changeGridCell={changeGridCell} />
+                {findPathStatus && <p className="select-path-error-message">Please Select Points</p>}
+            </div>
+            <div className="show-nodes-container">
                 {
-                    resetAlgoStatus ? <button className="reset-path-button" onClick={resetAlgorithim}>Reset All</button> : <button className="find-path-button" onClick={runAlgorithm}>Find Path</button>
+                    startNode &&
+                    <div>
+                        <h3>Start Node</h3>
+                        <div className="start-node-show-div">
+                            <p className="node-value">row: {startNode.row}</p>
+                            <p className="node-value">col: {startNode.col}</p>
+                        </div>
+                    </div>
                 }
                 {
-                    resetPointsButtonStatus ? <button className="reset-path-button" onClick={resetPoints}>Reset start and end Points</button> : null
+                    endNode &&
+                    <div>
+                        <h3>End Node</h3>
+                        <div className="end-node-show-div">
+                            <p className="node-value">row: {endNode.row}</p>
+                            <p className="node-value">col: {endNode.col}</p>
+                        </div>
+                    </div>
                 }
 
             </div>
-
-            <div className="heading-div">
-                <h4>Please select start and end point by clicking on the grid cell</h4>
-                <h4>By right clicking on white cells you can set up blocked walls. By Right Clicking on blocked wall you can remove selected blocked walls</h4>
-            </div>
-
-
-            <Notations />
-
-            <GridComponent grid={grid} blockedCell={blockedCell} removeSelectedBlockedCell={removeSelectedBlockedCell} changeGridCell={changeGridCell} />
-            {findPathStatus && <p className="select-path-error-message">Please Select Points</p>}
 
         </div>
     );

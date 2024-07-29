@@ -1,8 +1,8 @@
 import { GridType } from "../../types/CellTypes";
 
 function createCell(): GridType[][] {
-    const rows = 8;
-    const cols = 10;
+    const rows = 7;
+    const cols = 20;
     const grid: GridType[][] = []
 
     for (let row = 0; row < rows; row++) {

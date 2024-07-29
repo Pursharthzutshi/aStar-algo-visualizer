@@ -2,8 +2,31 @@
 .top-heading{
     margin-top: -10px;
 }
-.reset-buttons-div{
+.reset-buttons-div,.show-nodes-container,.start-node-show-div,.end-node-show-div,.grid-component-container{
     display:flex;
+}
+
+.grid-component-container{
+    flex-direction: column;
+}
+.grid-component-container{
+    justify-content: center;
+    align-items: center;
+}
+.show-nodes-container{
+    gap:20px;
+    align-items: center;
+    justify-self: center;
+}
+
+.start-node-show-div,.end-node-show-div{
+    gap:6px;
+}
+
+.node-value{
+    margin-top: -11px;
+    text-align: center;
+    font-size: 1.1rem;
 }
 
 .reset-buttons-div{
