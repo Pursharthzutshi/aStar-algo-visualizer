@@ -1,98 +1,172 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import { GridType, TileType } from "../../types/CellTypes";
+import { useAppDispatch, useAppSelector } from "../../ReduxHooks";
+import { setFindPathStatus, setResetAlgoStatus, setResetPointsButtonStatus } from "../../ReduxSlicers/AlgorithimSlicer";
+
+import GridComponent from "../GridComponent/GridComponent";
 import AStar from "../algorithim/Astar";
 import createCell from "../util/CreateCell";
-import GridComponent from "../GridComponent/GridComponent";
+import Notations from "./Notations";
 
-import "../GridComponent/GridComponent.css";
-import {  gridType, TileType } from "../../types/CellTypes";
-
-type NodeType = {
-    row: number;
-    col: number;
-}
+import "./PathFindingComponent.css"
 
 function PathFindingComponent() {
-    const [resetAlgoStatus, setResetAlgoStatus] = useState<boolean>(false);
-    const [startRowNode, setStartRowNode] = useState<number | null>(null);
-    const [startColNode, setStartColNode] = useState<number | null>(null);
-    const [endRowNode, setEndRowNode] = useState<number | null>(null);
-    const [endColNode, setEndColNode] = useState<number | null>(null);
-    const [grid, setGrid] = useState<gridType[][]>(createCell());
-    const [timeouts, setTimeouts] = useState<NodeJS.Timeout[]>([]);
-    const [startNode, setStartNode] = useState<TileType | null>(null);
-    const [endNode, setEndNode] = useState<TileType | null>(null);
-    const [path, setPath] = useState<TileType[]>([]);
+
+    // USE STATES
+
+    const [startNode, setStartNode] = useState<GridType | null>(null);
+    const [endNode, setEndNode] = useState<GridType | null>(null);
+
+    const [timeoutIds, setTimeoutIds] = useState<ReturnType<typeof setTimeout>[]>([]);
+
+    const [grid, setGrid] = useState(createCell())
+
+    // USE SELECTORS
+
+    const resetAlgoStatus = useAppSelector((state) => state.AlgorithimSlicer.resetAlgoStatus)
+    const findPathStatus = useAppSelector((state) => state.AlgorithimSlicer.findPathStatus)
+    const resetPointsButtonStatus = useAppSelector((state) => state.AlgorithimSlicer.resetPointsButtonStatus)
+
+    const Dispatch = useAppDispatch()
 
 
+    // UPDATE GRID CELLS 
+
+    const updateGridCell = (row: number, col: number, updates: Partial<GridType>): GridType[][] => {
+        return grid.map((rowArray, rowIndex) => {
+            return rowArray.map((cell, colIndex) => {
+                if (rowIndex === row && colIndex === col) {
+                    return { ...cell, ...updates };
+                }
+                return cell;
+            })
+        })
+    }
+
+    // CHANGE GRID CELLS
 
     const changeGridCell = (row: number, col: number) => {
-        const newGridCell = grid.map((r, rowIndex) =>
-            r.map((cell: gridType, colIndex: number) =>
-                rowIndex === row && colIndex === col ? { ...cell, isPath: !cell.isPath, isTraversed: true } : cell,
-            )
-        );
-        setGrid(newGridCell);
-        if (startRowNode === null || startColNode === null) {
-            setStartRowNode(row);
-            setStartColNode(col);
+
+        if (!startNode) {
+            const newGridCell: GridType[][] = updateGridCell(row, col, { isStart: true, isEnd: false, isWall: false })
             setStartNode(newGridCell[row][col]);
-        } else {
-            setEndRowNode(row);
-            setEndColNode(col);
+            setGrid(newGridCell)
+        } else if (!endNode) {
+            const newGridCell: GridType[][] = updateGridCell(row, col, { isStart: false, isEnd: true, isWall: false })
             setEndNode(newGridCell[row][col]);
+            setGrid(newGridCell)
         }
+        Dispatch(setFindPathStatus(false));
+        Dispatch(setResetPointsButtonStatus(true))
 
     };
 
+    // BLOCKED CELLS
+
+    const blockedCell = (row: number, col: number) => {
+        const newGridCell: GridType[][] = updateGridCell(row, col, { isWall: !grid[row][col].isWall, isTraversed: false });
+        setGrid(newGridCell);
+    }
+
+    const removeSelectedBlockedCell = (row: number, col: number) => {
+        const newGridCell: GridType[][] = updateGridCell(row, col, { isWall: false, isTraversed: false });
+        setGrid(newGridCell);
+    }
+
+    // ALGORITHIM
+
     const runAlgorithm = useCallback(() => {
-        if (startNode && endNode) {
-            const newPath = AStar(grid, startNode, endNode);
-            setPath(newPath || []);
-            setResetAlgoStatus(true);
-
-            newPath?.map((val: any, index: number) => {
-                setTimeout(() => {
-                    return grid[val.row][val.col].isTraversed = true
-                }, index * 500)
-            })
-
-
-            console.log(newPath)
+        console.log("asd")
+        if (!startNode || !endNode) {
+            Dispatch(setFindPathStatus(true));
+            return;
         }
+        const newPath = AStar(grid, startNode, endNode);
+        const ids: ReturnType<typeof setTimeout>[] = [];
+
+        newPath?.forEach((val: TileType, index: number) => {
+            const timeoutId: ReturnType<typeof setTimeout> = setTimeout(() => {
+                grid[val.row][val.col].isTraversed = true;
+                setGrid((prevGrid) => {
+                    const updatedGrid = [...prevGrid];
+                    updatedGrid[val.row][val.col].isTraversed = true;
+                    return updatedGrid;
+                });
+                Dispatch(setResetAlgoStatus(true))
+            }, index * 200);
+
+            ids.push(timeoutId);
+        });
+
+        setTimeoutIds(ids);
+        Dispatch(setFindPathStatus(false));
+
     }, [grid, startNode, endNode]);
 
-    useEffect(() => {
-        timeouts.forEach(timeout => clearTimeout(timeout));
-        setTimeouts([]);
 
-        if (path.length > 0) {
-            const newTimeouts: NodeJS.Timeout[] = path.map((node: NodeType, index: number) =>
-                setTimeout(() => {
-                    changeGridCell(node.row, node.col);
-                }, index * 500)
-            );
-            setTimeouts(newTimeouts);
-        }
-    }, [path]);
+    // RESET GRID POINTS 
+
+    const resetGrid = (resetGridUpdates: Partial<GridType>) => {
+        Dispatch(setFindPathStatus(false));
+
+        return grid.map(rowArray => {
+            return rowArray.map((prevCell) => {
+                return { ...prevCell, ...resetGridUpdates }
+            })
+        })
+
+    }
+
+    const resetPoints = () => {
+
+        Dispatch(setResetPointsButtonStatus(false))
+        setStartNode(null)
+        setEndNode(null)
+        const updatedResetGrid = resetGrid({ isTraversed: false, isStart: false, isEnd: false })
+        setGrid(updatedResetGrid)
+    }
+
+    // RESET ALGORITHIM
 
     const resetAlgorithim = () => {
         setStartNode(null);
-        setStartRowNode(null);
-        setStartColNode(null)
         setEndNode(null);
-        setPath([]);
-        setResetAlgoStatus(false);
         setGrid(createCell());
+
+        Dispatch(setResetPointsButtonStatus(false));
+        Dispatch(setResetAlgoStatus(false));
+
+        timeoutIds.forEach(clearTimeout);
+
+        setTimeoutIds([]);
     };
+
 
     return (
         <div className="grid">
-            {
-                resetAlgoStatus ?
-                    <button className="reset-path-button" onClick={resetAlgorithim}>Reset</button> :
-                    <button className="find-path-button" onClick={runAlgorithm}>Find Path</button>
-            }
-            <GridComponent grid={grid} changeGridCell={changeGridCell} />
+            <h4 className="top-heading">A Star Visualizer</h4>
+            <div className="reset-buttons-div">
+
+                {
+                    resetAlgoStatus ? <button className="reset-path-button" onClick={resetAlgorithim}>Reset All</button> : <button className="find-path-button" onClick={runAlgorithm}>Find Path</button>
+                }
+                {
+                    resetPointsButtonStatus ? <button className="reset-path-button" onClick={resetPoints}>Reset start and end Points</button> : null
+                }
+
+            </div>
+
+            <div className="heading-div">
+                <h4>Please select start and end point by clicking on the grid cell</h4>
+                <h4>By right clicking on white cells you can set up blocked walls. By Right Clicking on blocked wall you can remove selected blocked walls</h4>
+            </div>
+
+
+            <Notations />
+
+            <GridComponent grid={grid} blockedCell={blockedCell} removeSelectedBlockedCell={removeSelectedBlockedCell} changeGridCell={changeGridCell} />
+            {findPathStatus && <p className="select-path-error-message">Please Select Points</p>}
+
         </div>
     );
 }

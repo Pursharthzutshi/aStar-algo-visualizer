@@ -1,46 +1,57 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Pathfinding project-:
 
-## Available Scripts
+# Pathfinding Visualization
 
-In the project directory, you can run:
+This project visualizes the A* algorithm for pathfinding on a grid. Users can select start and end points on the grid and run the algorithm to find the shortest path between them. Walls can also be placed on the grid to simulate obstacles.
 
-### `npm start`
+# Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Interactive grid where users can select start and end points.
+Visualization of the A* algorithm in action.
+Ability to reset the grid and run the algorithm again.
+Walls to simulate obstacles in the pathfinding process.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Technologies Used -:
 
-### `npm test`
+React
+TypeScript
+CSS
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Method 
 
-### `npm run build`
+The user can select start and end points by clicking on the grid cells
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+After that the user can click on find path button to run Algoritim.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. The user can reset the whole algorithim, points and path by clicking on reset all button.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. The user can reset start and end point by clicking on reset points button.
 
-### `npm run eject`
+3. The user can reset all blocked point by clicking on reset all blocked points button.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+4. The user can select block point by right clicking and can also remove existing block points again simply by right click.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+In this start, end, traversed path, blocked path are denoted by different colors.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+# Run Jests Tests
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+To Run jest test cases user can simply go to  _test_ folder
+and can run command `npm test Astar.test.tsx`
 
-## Learn More
+Here I had added 3 jest cases-:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Taken random grid values to check smaller path length 
+2. Taken random grid values to greater path length 
+3. Snapshot test case
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+
+# About Algorithim 
+
+A* is an informed search algorithm, or a best-first search, meaning that it is formulated in terms of weighted graphs: starting from a specific starting node of a graph, it aims to find a path to the given goal node having the smallest cost (least distance travelled, shortest time, etc.). It does this by maintaining a tree of paths originating at the start node and extending those paths one edge at a time until the goal node is reached.
+
+At each iteration of its main loop, A* needs to determine which of its paths to extend. It does so based on the cost of the path and an estimate of the cost required to extend the path all the way to the goal. Specifically, A* selects the path that minimizes
+
+f(n) = g(n) + h(n)
+
+where n is the next node on the path, g(n) is the cost of the path from the start node to n, and h(n) is a heuristic function that estimates the cost of the cheapest path from n to the goal. The heuristic function is problem-specific. If the heuristic function is admissible – meaning that it never overestimates the actual cost to get to the goal – A* is guaranteed to return a least-cost path from start to goal.

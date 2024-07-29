@@ -5,63 +5,50 @@
     border: 1px solid #ccc;
 }
 
-/* .cell:hover{
-    background: lightgray;
-} */
-
-.cell.wall {
-    background-color: #000;
-}
-
-.star-effect {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 20px solid gold;
-    transform: translate(-50%, -50%);
-    animation: star-animation 0.5s ease-out forwards;
-}
-
-@keyframes star-animation {
-    0% {
-        width: 0;
-        height: 0;
-        opacity: 1;
-    }
-
-    100% {
-        width: 50px;
-        height: 50px;
-        opacity: 0;
-    }
-}
-
-
 .cell-path {
-    background: linear-gradient(to left, rgb(1, 1, 91), rgb(0, 0, 82));
-    animation: .2s ease cellPathEffect;
+    background: white;
 }
 
-@keyframes cellPathEffect {
+.cell-traversed {
+    pointer-events: none;
+
+    animation: .2s ease-in cellTraversedEffect;
+    background: rgb(0, 0, 75);
+}
+
+
+@keyframes cellTraversedEffect {
     0% {
-        transform: scale(.8);
-        opacity: .2;
+        background: rgba(89, 89, 252, 0.57);
+        transform: scale(.1);
+        /* opacity: .2; */
     }
 
     100% {
+        background: rgba(0, 0, 139, 0.89);
         transform: scale(1);
-        opacity: 1;
+        /* opacity: 1; */
     }
 }
 
-#traversed {
-    background: darkblue;
+.cell-start {
+    background: rgb(0, 136, 0);
+    pointer-events: none;
+
 }
 
-/* #not-traversed{
-    background-color: darkblue;
-} */
+.cell-end {
+    background: rgb(238, 0, 0);
+    pointer-events: none;
+
+}
+
+
+.cell-wall {
+    background: darkgray;
+}
+
+
+.prevent-selecting-third-point {
+    pointer-events: none;
+}

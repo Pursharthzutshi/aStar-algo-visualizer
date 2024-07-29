@@ -1,0 +1,36 @@
+@media only screen and (min-width:200px) and (max-width: 1000px) {
+
+    .App {
+        display: flex;
+
+    }
+
+    .App {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .select-points-heading-div{
+        width: 100%;
+    }
+
+    .notations-container {
+        text-align: center;
+        gap: 2px;
+        flex-direction: column;
+    }
+
+    .grid {
+        width: 10%;
+    }
+
+    .cell-notation {
+        width: 2rem;
+        height: 3vh;
+    }
+
+    h3 {
+        white-space: nowrap;
+    }
+}

@@ -1,32 +1,46 @@
 
-import { gridType } from "../../types/CellTypes";
+import { CellComponentProps } from "../../types/CellTypes";
 import "../CellComponent/CellComponent.css"
 
-interface CellComponentProps {
-    cell: gridType;
-    isTraversed: boolean
-    isStart: boolean
-    isEnd: boolean
-    isWall: boolean
-    isPath: boolean
-    onClick: (row: number, col: number) => void;
-}
 
-function CellComponent({ cell, isStart, isEnd, isTraversed, isWall, isPath, onClick }: CellComponentProps) {
+function CellComponent({ cell, changeGridCell, blockedCell, removeSelectedBlockedCell }: CellComponentProps) {
 
-    // const extraClassName = isStart ? 'cell-start' : isEnd ? 'cell-end' : isWall ? 'cell-wall' : isPath ? 'cell-path' : '';
-    const extraClassName =  isPath ? 'cell-path' : '';
-    const blockedStateClassName = !cell.isPath ? "blocked" : "non-blocked"
+    // CLASSNAMES 
 
-    const traveresdPaths = isTraversed ? "traversed" : "not-traversed"
+    const start = cell.isStart ? 'cell-start' : '';
+    const end = cell.isEnd ? 'cell-end' : '';
+    const wall = cell.isWall ? 'cell-wall' : '';
+    const path = cell.isPath ? 'cell-path' : '';
+    const traversed = (cell.isStart || cell.isEnd) ? "" : (cell.isTraversed ? "cell-traversed" : '');
+
+    // SETTING UP CLASSESS
+
+    const cellClass = `cell ${start} ${end} ${wall} ${path} ${traversed}`;
+
+    // GRID CELL 
 
     const handleClick = () => {
-        onClick(cell.row, cell.col);
+        changeGridCell(cell.row, cell.col);
     };
+
+    // BLOCKED CELL COORDINATES
+
+    const setUpBlockedCell = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault()
+        console.log(cell.isWall)
+        // if (cell.isWall) {
+        //     removeSelectedBlockedCell(cell.row, cell.col)
+        // }
+        if (!cell.isWall) {
+            blockedCell(cell.row, cell.col)
+        } else {
+            removeSelectedBlockedCell(cell.row, cell.col)
+        }
+    }
 
     return (
         <div>
-            <div id={traveresdPaths} className={`cell ${extraClassName}`} onClick={handleClick}></div>
+            <div onContextMenuCapture={setUpBlockedCell} className={`${cellClass}`} onClick={handleClick}></div>
         </div>
     )
 }

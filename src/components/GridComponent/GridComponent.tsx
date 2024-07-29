@@ -1,34 +1,24 @@
 import CellComponent from '../CellComponent/CellComponent';
+import { cellTypes, GridType } from '../../types/CellTypes';
 
 import './GridComponent.css';
 import "../CellComponent/CellComponent.css"
-import { gridType } from '../../types/CellTypes';
 
-export type cellTypes = {
-  grid:gridType[][]
-  changeGridCell: (row: number, col: number) => void; 
-}
+function GridComponent({ grid, blockedCell, removeSelectedBlockedCell, changeGridCell }: cellTypes) {
 
-function GridComponent({ grid, changeGridCell }: cellTypes) {
     return (
         <div className="grid">
-            {grid.map((row: gridType[], rowIndex: number) => (
+            {grid.map((row: GridType[], rowIndex: number) => (
                 <div key={rowIndex} className="row">
-                    {row.map((cell: gridType, colIndex: number) => (
+                    {row.map((cell: GridType) => (
                         <CellComponent
-                            isStart={cell.isStart}
-                            isEnd={cell.isEnd}
-                            isWall={cell.isWall}
-                            isPath={cell.isPath}
-                            isTraversed={cell.isTraversed}
-                            key={colIndex}
                             cell={cell}
-                            onClick={changeGridCell}
-                        />
+                            changeGridCell={changeGridCell}
+                            blockedCell={blockedCell} removeSelectedBlockedCell={removeSelectedBlockedCell} isTraversed={false} isStart={false} isEnd={false} isWall={false} isPath={false} />
                     ))}
-
                 </div>
             ))}
+            <br></br>
         </div>
 
     )

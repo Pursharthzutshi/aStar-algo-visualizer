@@ -1,0 +1,47 @@
+
+.top-heading{
+    margin-top: -10px;
+}
+.reset-buttons-div{
+    display:flex;
+}
+
+.reset-buttons-div{
+    flex-direction: row;
+}
+.reset-buttons-div{
+    gap:20px;
+
+}
+.reset-path-button,
+.find-path-button {
+    background: rgb(0, 0, 95);
+    font-size: 1rem;
+    color: white;
+    padding: 4px 12px 4px 12px;
+}
+
+
+.reset-path-button:hover,
+.find-path-button:hover {
+    background: white;
+    color: darkblue;
+    transition: .2s;
+    cursor: pointer;
+}
+
+.heading-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.heading-div h4:nth-child(2){
+    margin-top: -7px;
+}
+
+.select-path-error-message{
+    margin-top: -5px;
+    color:red;
+}

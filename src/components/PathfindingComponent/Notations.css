@@ -1,0 +1,41 @@
+.notations-container,
+.notations-div {
+    display: flex;
+}
+
+.notations-container {
+    gap: 30px;
+    flex-direction: row;
+}
+
+.notations-div {
+    align-items: center;
+    flex-direction: column;
+}
+
+.cell-notation {
+    width: 2rem;
+    height: 3vh;
+    box-shadow: .2px .2px 6px .2px lightgray;
+}
+
+
+.notations-container .notations-div:nth-child(1) .cell-notation {
+    background: green;
+}
+
+.notations-container .notations-div:nth-child(2) .cell-notation {
+    background: red;
+}
+
+.notations-container .notations-div:nth-child(3) .cell-notation {
+    background: darkblue;
+}
+
+.notations-container .notations-div:nth-child(4) .cell-notation {
+    background: rgb(255, 255, 255);
+}
+
+.notations-container .notations-div:nth-child(5) .cell-notation {
+    background: darkgray;
+}
